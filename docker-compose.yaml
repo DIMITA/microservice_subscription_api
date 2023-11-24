@@ -1,0 +1,45 @@
+version: "3.8"
+services:
+    # Mysql database container
+    db:
+        image: mysql
+        container_name: db_pixel_war
+        restart: on-failure
+        volumes:
+            - db-data:/var/lib/mysql
+        environment:
+            MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+            MYSQL_DATABASE: subscription
+            MYSQL_PASSWORD: rootpw
+            MYSQL_USER: user
+        networks:
+            - subscription
+
+    rabbitmq:
+        image: rabbitmq:3-management-alpine
+        container_name: 'rabbitmq'
+        ports:
+            - 5672:5672
+            - 15672:15672
+        volumes:
+            - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+            - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+        networks:
+            - subscription
+
+    node:
+        build:
+            context: .
+            dockerfile: docker/Dockerfile
+        restart: on-failure
+        ports:
+            - "3020:3020"
+        networks:
+            - subscription
+
+networks:
+    subscription:
+
+
+volumes:
+    db-data:
