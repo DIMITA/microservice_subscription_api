@@ -16,12 +16,4 @@ export class CreateUserDto {
   @ApiProperty()
   email: string;
 
-  @ApiProperty()
-  role: boolean;
-
-  @ApiProperty()
-  verifyToken?: string;
-
-  @ApiProperty()
-  isVerify?: boolean;
 }
