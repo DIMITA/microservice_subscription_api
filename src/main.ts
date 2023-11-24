@@ -1,10 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 const user = 'guest';
 const pwd = 'guest';
-const host = 'localhost';
+const host = 'rabbitmq';
 const port = 5672;
 
 async function bootstrap() {
@@ -19,6 +20,14 @@ async function bootstrap() {
       },
     },
   });
-  await app.listen(3009);
+
+  const config = new DocumentBuilder()
+    .setTitle('Subscription API')
+    .setDescription('The Subscription API description')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+  await app.listen(3020);
 }
 bootstrap();
